@@ -1,0 +1,29 @@
+there are 3 subquestion:
+  |'time window' | 'install time'|
+--|--------------|---------------|---------
+1.|    0         |    const      |
+2.|    1         |    const      |
+3.|    1         |    variable   | and others
+                                       ^
+                                     自由发挥
+first:
+	there is only one car to deliver.
+
+https://wenku.baidu.com/view/a057ce1fa300a6c30c229f46.html
+already shared on QQ
+
+#focus on solving problem #1
+1.the shortest distance between two nodes:Dijkstra, OK
+2.one car traverse from origin, and back to origin <next goal>
+	Travelling Salesman Problem
+	my algo: BFS or DFS from O to O, and cut branches(consider time efficiency)
+3.divide nodes to 14 parts for 14 cars, consider: <--main algorithm
+-->path length(means time)
+-->node number(considering install time)
+the time of the 14 parts should be similar -> less time
+
+#a little think about problem #2
+every car:
+	time to departure
+	time of return 
+divide to 14 parts <WITH TIME>
