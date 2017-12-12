@@ -10,6 +10,7 @@ first:
 	there is only one car to deliver.
 
 https://wenku.baidu.com/view/a057ce1fa300a6c30c229f46.html
+http://www.doc88.com/p-38379161023.html
 already shared on QQ
 
 #focus on solving problem #1
@@ -17,13 +18,79 @@ already shared on QQ
 2.one car traverse from origin, and back to origin <next goal>
 	Travelling Salesman Problem
 	my algo: BFS or DFS from O to O, and cut branches(consider time efficiency)
+	**Considering that each car goes to only about 4.6 points,
+	solving directly is OK, there is no need to find better algorithms
+	OK
 3.divide nodes to 14 parts for 14 cars, consider: <--main algorithm
 -->path length(means time)
 -->node number(considering install time)
 the time of the 14 parts should be similar -> less time
+	my algo: (may be quite bad) using <greedy strategy>:
+	every car goes to the nearest point(assume that install time is const), remove the point, 
+	and then the nearest point left, until finishing 4 or 5 points
+	then the second car departure.
+	then the third, to the last
 
 #a little think about problem #2
 every car:
 	time to departure
 	time of return 
 divide to 14 parts <WITH TIME>
+
+模型建立:
+
+最短路模型:每对顶点间最短路
+考虑到顶点很多,且为稠密图,使用单源最短路的Dijkstra或Bellman-Ford算法效率不高,
+可使用Floyd-Warshall算法一次求得任意两点间最短路.时间效率为O(n^3)
+(其他的地方不会,这里可以多说一点)
+*****(或许这算模型求解了?我不确定, 看着排版吧)*****
+
+伪代码(用于后期)
+// dist(i,j) 为从节点i到节点j的最短距离
+For i←1 to n do
+   For j←1 to n do
+      dist(i,j) = weight(i,j) 
+ 
+For k←1 to n do // k为“媒介节点”
+   For i←1 to n do
+      For j←1 to n do
+         if (dist(i,k) + dist(k,j) < dist(i,j)) then // 是否是更短的路径？
+            dist(i,j) = dist(i,k) + dist(k,j)
+
+TSP模型:即旅行家问题,求从原点出发最后回到原点的遍历最短路径
+每个子图均需求出遍历最短路径(从原点出发最后回到原点),为 TSP问题
+考虑到分割全图后每辆车只配送5-6处地点,求解每个子图的遍历最短路径使用暴力求解法即可
+
+图的分割求解模型:将一张图分为几个子图,每个子图分别遍历,并使总代价最小(节点处消耗也算在内)
+考虑用蚁群算法求近似最优解
+
+(题二)有时间约束的线性规划问题模型:因为有时间窗口的限制
+可使用遗传算法
+(是否能实现我个人不抱有太大希望)
+
+
+算法设计思路:
+
+基本操作:
+	先用Floyd算法求出最短路矩阵
+
+题1:
+	先用xxx算法将图分割为14个子图,14辆车分别按TSP暴击求解所得的最优解遍历14个子图
+	xxx算法保证完成总时间(代价)近似最优,即可完成目标
+
+
+
+题2:
+	可以考虑使用改进的遗传算法
+	
+题3:
+	考虑到安装时间的不确定性,可以对图的分割求解进行改进优化,加上这个权重.
+	(这个直觉不难,但实际不知道)
+	可以自由发挥一下(胡乱分析)
+
+	灵敏性分析:
+	假设有堵车情况,某几条路权值变大,重跑算法,观察结果
+	(2期)
+
+
+	/*感觉到了分析稳定性和(或?)敏感性的时候了*/
