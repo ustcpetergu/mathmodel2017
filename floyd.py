@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 '''
 Floyd algorithm: shortest path between each two nodes
-input from data.txt, and output result to data2.txt
+input from infile, and output result to outfile
 2017/12/16
 '''
-num = 65 + 1
-#0 - 65 destinations
-
+infile = input('infile:')
+outfile = input('outfile:')
+num = int(input('node num:'))
 dist = [[0 for col in range(num)] for row in range(num)]
-#init the distance matrix
-
-fin = open("./data.txt", "r")
-fout = open("data2.txt", "w")
+fin = open(infile, "r")
+fout = open(outfile, "w")
 for i in range(num):
     data = fin.readline()
     dist[i] = [float(j) for j in data.split()]
@@ -23,7 +21,7 @@ for k in range(num):
     for i in range(num):
         for j in range(num):
             if dist[i][k] + dist[k][j] < dist[i][j]:
-                dist[i][k] + dist[k][j] < dist[i][j]
+                dist[i][j] = dist[i][k] + dist[k][j] 
 for i in dist:
     for j in i:
         fout.write(str(j) + ' ')
