@@ -6,7 +6,7 @@ input from infile, and output result to outfile
 '''
 infile = input('infile:')
 outfile = input('outfile:')
-num = int(input('node num:'))
+num = int(input('city num:'))
 dist = [[0 for col in range(num)] for row in range(num)]
 fin = open(infile, "r")
 fout = open(outfile, "w")
@@ -24,7 +24,7 @@ for k in range(num):
                 dist[i][j] = dist[i][k] + dist[k][j] 
 for i in dist:
     for j in i:
-        fout.write(str(j) + ' ')
+        fout.write(str(round(j, 3)) + ' ')
     fout.write('\n')
 fin.close()
 fout.close()
