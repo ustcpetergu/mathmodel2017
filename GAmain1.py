@@ -11,7 +11,7 @@ from math import *
 
 cities = 66     #all 66 cities
 travelers = 14  #all 14 travelers
-T = 200     #generations
+T = 30     #generations
 N = 500     #population
 
 pc = 0.8    #crossover probability
@@ -21,11 +21,12 @@ dist = [[0 for col in range(cities)] for row in range(cities)]
 #installation time of each city, in question 1, all is same.
 #I'll take the average value, 1.1 hours, and exchange time to distance
 #with speed 60km/h
-installlength = [1.1 * 60 for i in range(cities)]
+installtimelength = [1.1 * 60 for i in range(cities)]
 
 class individual:
+    #init with a random route for each indiviudal
     def __init__(self):
-        #fitness of each individual
+        #fitness of each individual, smaller is better
         self.fitness = 0
         #the chromosomes -- S
         #   a three-dimension array
@@ -41,6 +42,9 @@ class individual:
         #
         #using this method is easier to program
         self.chrm = [[0 for i in range(cities)] for j in range(travelers)] 
+        t = shuffle([x for x in range(cities)])
+        for i in range(cities):
+            self.chrm[randint(0, travelers - 1)][i] = t[i]
 
 
 #the population and popnew for temp storage
@@ -68,7 +72,7 @@ def calc_fitness():
             for k in range(cities):
                 citynow = population[i].chrm[j][k]
                 length += dist[citynow][k]          #length on-way
-                length += installlength[citynow]    #"length" at-install
+                length += installtimelength[citynow]    #"length" at-install
         population[i].fitness = length
 
 
@@ -78,6 +82,7 @@ def calc_fitness():
 #n is ranking
 #a and b are constants 1<=a<=2, always 1.1, b=2a-2
 def select():
+    #FIXME:bugs here! smaller fitness means greater chance!
     print("select...")
     global population
     global popnew
@@ -110,11 +115,59 @@ def select():
     for i in range(N):
         population[i] = popnew[i]
 
+#input a individual's chromosome
+#return striped(without zeros, a one-dimension array) chrm
+def strip(chrm):
+    return [sum(chrm[j][i] for j in range(travelers)) for i in range(cities)]
+#input a striped chromosome and the individual's original chromosome
+#return expanded chrm
+def expand(schrm, chrm):
+    # return [sum(chrm[j][i] for j in range(travelers)) for i in range(cities)]
+    for i in range(cities):
+        for j in range(travelers):
+            if chrm[j][i] != 0:
+                chrm[j][i] = schrm[i]
+                break
+    return chrm
+
 def crossover():
+    #use order crossover (OX)
+    #choose 2 random crossover points
+    #exchange crossover parts
+    #keep relative sequence of cities
+    #a1 = 0 1 2 3 4 5 6 7 8 9
+    #a2 = 9 8 7 6 5 4 3 2 1 0
+    #OX points: ^1  ^2
+    #b1 = 0 1 2|6 5 4|6 7 8 9
+    #b2 = 9 8 7|3 4 5|6 7 8 9
+    #a1 from point 2:6 7 8 9 0 1 2 3 4 5
+    #remove 6 5 4:7 8 9 0 1 2 3
+    #refill from point 2:1 2 3|6 5 4|7 8 9 0
     print("crossover...")
-    #pair randomly
+    #pair randomly using shuffled array
     hash = [i for i in range(N)]
     shuffle(hash)
+    for i in range(int((N - 1) / 2)):
+        if random() > pc:
+            #crossover i and N-i-1
+            #strip
+            a1 = strip(population[i].chrm)
+            a2 = strip(population[N - i - 1].chrm)
+            pos1, pos2 = sorted((randint(0, cities - 1), randint(0, cities - 1)))
+            length = pos2 - pos1 + 1
+            ta = a1[pos1:pos2 + 1]
+            tb = a2[pos1:pos2 + 1]
+            a1 = a1[:pos1] + tb + a1[pos2 + 1:]
+            a2 = a2[:pos1] + ta + a2[pos2 + 1:]
+            #remove
+            t1 = [x for x in a1[pos2 + 1:] + a1[:pos2 + 1] if not x in tb]
+            t2 = [x for x in a2[pos2 + 1:] + a2[:pos2 + 1] if not x in ta]
+            #refill
+            afinal = t1[pos1:] + tb + t1[:pos1]
+            bfinal = t2[pos1:] + ta + t2[:pos1]
+            #expand
+            population[i].chrm = expand(afinal, population[i].chrm)
+            population[N - i - 1].chrm = expand(bfinal, population[N - i - 1].chrm)
 
 def mutation():
     print("mutation...")
@@ -123,11 +176,9 @@ def mutation():
         for j in range(travelers):
             rand = random()
             if rand < pm * 0.5:
-                print("mutation -- reverse...")
+                # print("mutation -- reverse...")
                 #1. reverse a slice of chrm(only non-zero value) between ranint1 and ranint2
-                ranint1 = randint(0, cities)
-                ranint2 = randint(0, cities)
-                ranint1, ranint2 = sorted((ranint1, ranint2))
+                ranint1, ranint2 = sorted((randint(0, cities - 1), randint(0, cities - 1)))
                 #t is population[i].chrm[j] with zeros striped
                 t = [x for x in population[i].chrm[j] if x]
                 t.reverse()
@@ -140,7 +191,7 @@ def mutation():
                         flag += 1
         rand = random()
         if rand < pm * 0.5:
-            print("mutation -- exchange...")
+            # print("mutation -- exchange...")
             #2. exchange.
             #randomly find s_i_k = 0, s_j_l != 0, and swap them (showed in <>)
             #exist s_i'_k !=0, i' in {1 to n} \ {i}
@@ -162,7 +213,6 @@ def mutation():
             for j in range(travelers):
                 for k in range(cities):
                     # print("--"+str(i)+"--"+str(j)+"--"+str(k)+"--")
-                    # NOTE:may be bugs here!
                     if population[i].chrm[j][k] == 0:
                         cnt0 += 1
                     else:
@@ -198,16 +248,26 @@ def mutation():
             population[i].chrm[sii][sk], population[i].chrm[sjj][sl] = \
                 (population[i].chrm[sjj][sl], population[i].chrm[sii][sk])
 
+def print_result():
+    maxi = 0
+    for i in range(N):
+        if population[i].fitness < population[maxi].fitness:
+            maxi = i
+    print("min distance found:", population[maxi].fitness)
+    for i in range(travelers):
+        print("traveler ", i, ":")
+        print([population[maxi].chrm[i][x] for x in range(cities) if population[maxi].chrm[i][x]])
 
 #begin of main
 initialize()
 #main loop
+calc_fitness()
 for t in range(T):
     print("generation " + str(t) + ":")
-    calc_fitness()
-    select()
     crossover()
     mutation()
+    calc_fitness()
+    select()
+print_result()
 print("end.")
-
 

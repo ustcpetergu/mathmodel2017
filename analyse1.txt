@@ -86,6 +86,8 @@ TSP模型:即旅行家问题,求从原点出发最后回到原点的遍历最短
 	https://www.cnblogs.com/liyuwang/p/6012712.htmlhttps://www.cnblogs.com/liyuwang/p/6012712.html
 
 	杂交:p_c = 0.8
+	http://www.doc88.com/p-147637195583.html
+	Page 17-18, OX algo
 	变异:倒位,交换,p_m = 0.1 ,each 0.5 * p_m
 	适应值
 
