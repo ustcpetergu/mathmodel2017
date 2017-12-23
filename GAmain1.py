@@ -9,8 +9,8 @@ from random import *
 from math import *
 
 
-cities = 66     #all 66 cities
-travelers = 14  #all 14 travelers
+cities = 5     #all 66 cities
+travelers = 3  #all 14 travelers
 T = 30     #generations
 N = 500     #population
 
@@ -22,6 +22,8 @@ dist = [[0 for col in range(cities)] for row in range(cities)]
 #I'll take the average value, 1.1 hours, and exchange time to distance
 #with speed 60km/h
 installtimelength = [1.1 * 60 for i in range(cities)]
+#the start point 0 don't need install time
+installtimelength[0] = 0
 
 class individual:
     #init with a random route for each indiviudal
@@ -29,7 +31,6 @@ class individual:
         #fitness of each individual, smaller is better
         self.fitness = 0
         #the chromosomes -- S
-        #   a three-dimension array
         #each individual from the population:
         #each traveler -- S_i: S_1 to S_travelers
         #   m-bit non-negative integer number(m means cities)
@@ -39,10 +40,11 @@ class individual:
         #S_i_j = 0:traveler i don't move in the j-th step globally
         #note that S_*_j only has only one non-zero value while *
         #goes from 1 to traveler
-        #
-        #using this method is easier to program
+        #NOTE: actually only m-1 is needed, but use m is easier for programming
+        #but it has caused troubles, but I'm too lazy to fix that
         self.chrm = [[0 for i in range(cities)] for j in range(travelers)] 
-        t = shuffle([x for x in range(cities)])
+        t = [x for x in range(cities)]
+        shuffle(t)
         for i in range(cities):
             self.chrm[randint(0, travelers - 1)][i] = t[i]
 
@@ -67,14 +69,21 @@ def calc_fitness():
     print("calulate fitness...")
     for i in range(N):
         length = 0
-        citynow = 0
         for j in range(travelers):
+            #start from city 0
+            citynow = 0
             for k in range(cities):
-                citynow = population[i].chrm[j][k]
-                length += dist[citynow][k]          #length on-way
-                length += installtimelength[citynow]    #"length" at-install
+                citynext = population[i].chrm[j][k]
+                if citynext != 0:
+                    #length on-way, from citynow to citynext
+                    # print(citynow, citynext)
+                    length += dist[citynow][citynext]
+                    citynow = citynext
+                    #"length" at-install
+                    length += installtimelength[citynow]
+            #go back to city 0
+            length += dist[citynow][0]
         population[i].fitness = length
-
 
 #linear ranking selection
 #probability of individual i: 
@@ -122,16 +131,40 @@ def strip(chrm):
 #input a striped chromosome and the individual's original chromosome
 #return expanded chrm
 def expand(schrm, chrm):
-    # return [sum(chrm[j][i] for j in range(travelers)) for i in range(cities)]
+    #all these verbose code is cause by <m or m-1> problem!
+    #(see defination of individual and chrm for more info)
+    schrm = [x for x in schrm if x]
+    print(len(schrm))
+    flag = 0
     for i in range(cities):
         for j in range(travelers):
             if chrm[j][i] != 0:
-                chrm[j][i] = schrm[i]
+                t = schrm[flag]
+                chrm[j][i] = t
+                flag += 1
                 break
     return chrm
+#check if a chrm is OK
+def chrmck(chrm):
+    h = [0 for i in range(cities)]
+    for j in range(cities):
+        t = 0
+        for i in range(travelers):
+            if chrm[i][j] != 0:
+                h[chrm[i][j]] += 1
+                t += 1
+        if t > 1:
+            print("No")
+            return -1
+    for i in range(1, cities):
+        if h[i] != 1:
+            print("No")
+            return -1
+    print("Yes")
+    return 1
 
 def crossover():
-    #use order crossover (OX)
+    #order crossover (OX)
     #choose 2 random crossover points
     #exchange crossover parts
     #keep relative sequence of cities
@@ -148,26 +181,52 @@ def crossover():
     hash = [i for i in range(N)]
     shuffle(hash)
     for i in range(int((N - 1) / 2)):
-        if random() > pc:
+        # if random() > pc:
+        if 1:
+            #NOTE:DEBUGING
             #crossover i and N-i-1
             #strip
             a1 = strip(population[i].chrm)
             a2 = strip(population[N - i - 1].chrm)
+            if sum(a1) - sum(range(cities)) != 0:
+                print('a1!: ', sum(a1) - sum(range(cities)))
+            if sum(a2) - sum(range(cities)) != 0:
+                print('a2!: ', sum(a2) - sum(range(cities)))
             pos1, pos2 = sorted((randint(0, cities - 1), randint(0, cities - 1)))
+            print('---')
+            print('pos1, pos2: ', pos1, pos2)
             length = pos2 - pos1 + 1
             ta = a1[pos1:pos2 + 1]
             tb = a2[pos1:pos2 + 1]
-            a1 = a1[:pos1] + tb + a1[pos2 + 1:]
-            a2 = a2[:pos1] + ta + a2[pos2 + 1:]
             #remove
-            t1 = [x for x in a1[pos2 + 1:] + a1[:pos2 + 1] if not x in tb]
-            t2 = [x for x in a2[pos2 + 1:] + a2[:pos2 + 1] if not x in ta]
+            t1 = [x for x in (a1[pos2 + 1:] + a1[:pos2 + 1]) if not x in tb]
+            t2 = [x for x in (a2[pos2 + 1:] + a2[:pos2 + 1]) if not x in ta]
             #refill
             afinal = t1[pos1:] + tb + t1[:pos1]
             bfinal = t2[pos1:] + ta + t2[:pos1]
+            
+            print(afinal)
+            print(bfinal)
+            
+            h = [0 for j in range(cities)]
+            for j in range(cities):
+                h[afinal[j]] += 1
+            print('afinal:', h)
+            h = [0 for j in range(cities)]
+            for j in range(cities):
+                h[bfinal[j]] += 1
+            print('bfinal:', h)
+            
+            if sum(afinal) - sum(range(cities)) != 0:
+                print('afinal!: ', sum(afinal) - sum(range(cities)))
+            if sum(bfinal) - sum(range(cities)) != 0:
+                print('bfinal!: ', sum(bfinal) - sum(range(cities)))
             #expand
             population[i].chrm = expand(afinal, population[i].chrm)
             population[N - i - 1].chrm = expand(bfinal, population[N - i - 1].chrm)
+            chrmck(population[i].chrm)
+            chrmck(population[N - i - 1].chrm)
+            print('---')
 
 def mutation():
     print("mutation...")
@@ -192,6 +251,7 @@ def mutation():
         rand = random()
         if rand < pm * 0.5:
             # print("mutation -- exchange...")
+            # print('--before--:', sum(range(0, cities)) - sum(strip(population[i].chrm)))
             #2. exchange.
             #randomly find s_i_k = 0, s_j_l != 0, and swap them (showed in <>)
             #exist s_i'_k !=0, i' in {1 to n} \ {i}
@@ -247,6 +307,7 @@ def mutation():
             #swap #2
             population[i].chrm[sii][sk], population[i].chrm[sjj][sl] = \
                 (population[i].chrm[sjj][sl], population[i].chrm[sii][sk])
+            # print('--after--:', sum(range(0, cities)) - sum(strip(population[i].chrm)))
 
 def print_result():
     maxi = 0
