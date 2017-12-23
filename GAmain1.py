@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 '''
+Math modeling
 genetic algorithms solving the MTSP question in Question 1
 touched on Sat Dec 16
 Yimin Gu
@@ -9,21 +10,25 @@ from random import *
 from math import *
 
 
-cities = 5     #all 66 cities
-travelers = 3  #all 14 travelers
-T = 30     #generations
+cities = 66    #all 66 cities
+travelers = 14  #all 14 travelers
+T = 200     #generations
 N = 500     #population
 
 pc = 0.8    #crossover probability
 pm = 0.1    #mutation probability
 
 dist = [[0 for col in range(cities)] for row in range(cities)]
+speed = 60
 #installation time of each city, in question 1, all is same.
 #I'll take the average value, 1.1 hours, and exchange time to distance
 #with speed 60km/h
 installtimelength = [1.1 * 60 for i in range(cities)]
 #the start point 0 don't need install time
 installtimelength[0] = 0
+
+#select probabilities
+selection = [0.0 for i in range(N)]
 
 class individual:
     #init with a random route for each indiviudal
@@ -41,13 +46,19 @@ class individual:
         #note that S_*_j only has only one non-zero value while *
         #goes from 1 to traveler
         #NOTE: actually only m-1 is needed, but use m is easier for programming
-        #but it has caused troubles, but I'm too lazy to fix that
+        #it has caused troubles, but I'm too lazy to fix that
         self.chrm = [[0 for i in range(cities)] for j in range(travelers)] 
         t = [x for x in range(cities)]
         shuffle(t)
         for i in range(cities):
             self.chrm[randint(0, travelers - 1)][i] = t[i]
 
+
+#global minimum distance
+mindistance = 999999.99
+mindistancenow = 999999.99
+mindistancehistory = 999999.99
+minindividualhistory = individual()
 
 #the population and popnew for temp storage
 population = [individual() for i in range(N)]
@@ -62,11 +73,56 @@ def initialize():
         data = fin.readline()
         dist[i] = [float(j) for j in data.split()]
     fin.close()
-    #initialize population
+    #init selector
+    global selection
+    p = [0 for i in range(N)]
+    pall = 0
+    a = 1.1
+    b = 2 * a - 2
+    #get probability of each individual and total probability
+    for i in range(N):
+        n = i + 1
+        p[i] = (a - b / (n + 1)) / (n)
+        pall += p[i]
+    #build up the selection, selection goes from smaller to larger
+    for i in range(N):
+        selection[i] = p[i] / pall
+    for i in range(1, N):
+        selection[i] += selection[i - 1]
+
+#calculate the fitness of each individual #2
+def calc_fitness2():
+    global mindistancehistory
+    global minindividualhistory
+    global mindistancenow
+    print("calulate fitness #2...")
+    mindistancelocal = -1
+    for i in range(N):
+        for j in range(travelers):
+            length = 0
+            #start from city 0
+            citynow = 0
+            for k in range(cities):
+                citynext = population[i].chrm[j][k]
+                if citynext != 0:
+                    length += dist[citynow][citynext]
+                    citynow = citynext
+                    #"length" at-install
+                    length += installtimelength[citynow]
+            #go back to city 0
+            length += dist[citynow][0]
+            mindistancelocal = max(mindistancelocal, length)
+        population[i].fitness = mindistancelocal
+        mindistancenow = mindistancelocal
+        if mindistancelocal < mindistancehistory:
+            mindistancehistory = mindistancelocal
+            minindividualhistory = population[i]
 
 #calculate the fitness of each individual
 def calc_fitness():
+    global mindistance
     print("calulate fitness...")
+    mindistance = 999999.99
     for i in range(N):
         length = 0
         for j in range(travelers):
@@ -84,6 +140,7 @@ def calc_fitness():
             #go back to city 0
             length += dist[citynow][0]
         population[i].fitness = length
+        mindistance = min(mindistance, length)
 
 #linear ranking selection
 #probability of individual i: 
@@ -91,27 +148,11 @@ def calc_fitness():
 #n is ranking
 #a and b are constants 1<=a<=2, always 1.1, b=2a-2
 def select():
-    #FIXME:bugs here! smaller fitness means greater chance!
     print("select...")
     global population
     global popnew
     #sort
     population = sorted(population, key = lambda x: x.fitness)
-    p = [0 for i in range(N)]
-    selection = [0.0 for i in range(N)]
-    pall = 0
-    #get probability of each individual and total probability
-    a = 1.1
-    b = 2 * a - 2
-    for i in range(N):
-        n = i + 1
-        p[i] = (a - b / (n + 1)) / (n)
-        pall += p[i]
-    #build up the selection, selection goes from smaller to larger
-    for i in range(N):
-        selection[i] = p[i] / pall
-    for i in range(1, N):
-        selection[i] += selection[i - 1]
     #choose randomly
     for i in range(N):
         #random real number from 0 to 1
@@ -119,6 +160,7 @@ def select():
         idx = 0
         while rand > selection[idx]:
             idx += 1
+        # print(idx)
         popnew[i] = population[idx]
     #copy
     for i in range(N):
@@ -134,7 +176,6 @@ def expand(schrm, chrm):
     #all these verbose code is cause by <m or m-1> problem!
     #(see defination of individual and chrm for more info)
     schrm = [x for x in schrm if x]
-    print(len(schrm))
     flag = 0
     for i in range(cities):
         for j in range(travelers):
@@ -144,7 +185,7 @@ def expand(schrm, chrm):
                 flag += 1
                 break
     return chrm
-#check if a chrm is OK
+#check if a chrm is OK, for debug use
 def chrmck(chrm):
     h = [0 for i in range(cities)]
     for j in range(cities):
@@ -162,7 +203,6 @@ def chrmck(chrm):
             return -1
     print("Yes")
     return 1
-
 def crossover():
     #order crossover (OX)
     #choose 2 random crossover points
@@ -178,23 +218,23 @@ def crossover():
     #refill from point 2:1 2 3|6 5 4|7 8 9 0
     print("crossover...")
     #pair randomly using shuffled array
-    hash = [i for i in range(N)]
-    shuffle(hash)
+    h = [i for i in range(N)]
+    shuffle(h)
     for i in range(int((N - 1) / 2)):
-        # if random() > pc:
-        if 1:
-            #NOTE:DEBUGING
+        if random() > pc:
             #crossover i and N-i-1
+            # print('---')
             #strip
-            a1 = strip(population[i].chrm)
-            a2 = strip(population[N - i - 1].chrm)
-            if sum(a1) - sum(range(cities)) != 0:
-                print('a1!: ', sum(a1) - sum(range(cities)))
-            if sum(a2) - sum(range(cities)) != 0:
-                print('a2!: ', sum(a2) - sum(range(cities)))
+            a1 = strip(population[h[i]].chrm)
+            a2 = strip(population[h[N - i - 1]].chrm)
+            # print('a1:', a1)
+            # print('a2:', a2)
+            # if sum(a1) - sum(range(cities)) != 0:
+                # print('a1!: ', sum(a1) - sum(range(cities)))
+            # if sum(a2) - sum(range(cities)) != 0:
+                # print('a2!: ', sum(a2) - sum(range(cities)))
             pos1, pos2 = sorted((randint(0, cities - 1), randint(0, cities - 1)))
-            print('---')
-            print('pos1, pos2: ', pos1, pos2)
+            # print('pos1, pos2: ', pos1, pos2)
             length = pos2 - pos1 + 1
             ta = a1[pos1:pos2 + 1]
             tb = a2[pos1:pos2 + 1]
@@ -205,28 +245,29 @@ def crossover():
             afinal = t1[pos1:] + tb + t1[:pos1]
             bfinal = t2[pos1:] + ta + t2[:pos1]
             
-            print(afinal)
-            print(bfinal)
+            # print('afinal :', afinal)
+            # print('bfinal :', bfinal)
             
-            h = [0 for j in range(cities)]
-            for j in range(cities):
-                h[afinal[j]] += 1
-            print('afinal:', h)
-            h = [0 for j in range(cities)]
-            for j in range(cities):
-                h[bfinal[j]] += 1
-            print('bfinal:', h)
+            # h = [0 for j in range(cities)]
+            # for j in range(cities):
+                # h[afinal[j]] += 1
+            # print('afinal:', h)
+            # h = [0 for j in range(cities)]
+            # for j in range(cities):
+                # h[bfinal[j]] += 1
+            # print('bfinal:', h)
             
-            if sum(afinal) - sum(range(cities)) != 0:
-                print('afinal!: ', sum(afinal) - sum(range(cities)))
-            if sum(bfinal) - sum(range(cities)) != 0:
-                print('bfinal!: ', sum(bfinal) - sum(range(cities)))
+            # if sum(afinal) - sum(range(cities)) != 0:
+                # print('afinal!: ', sum(afinal) - sum(range(cities)))
+            # if sum(bfinal) - sum(range(cities)) != 0:
+                # print('bfinal!: ', sum(bfinal) - sum(range(cities)))
+
             #expand
-            population[i].chrm = expand(afinal, population[i].chrm)
-            population[N - i - 1].chrm = expand(bfinal, population[N - i - 1].chrm)
-            chrmck(population[i].chrm)
-            chrmck(population[N - i - 1].chrm)
-            print('---')
+            population[h[i]].chrm = expand(afinal, population[h[i]].chrm)
+            population[h[N - i - 1]].chrm = expand(bfinal, population[h[N - i - 1]].chrm)
+            # chrmck(population[i].chrm)
+            # chrmck(population[N - i - 1].chrm)
+            # print('---')
 
 def mutation():
     print("mutation...")
@@ -234,7 +275,8 @@ def mutation():
         #two kind of mutation, each probability is 0.5 * pm
         for j in range(travelers):
             rand = random()
-            if rand < pm * 0.5:
+            # if rand < pm * 0.5:
+            if 0:
                 # print("mutation -- reverse...")
                 #1. reverse a slice of chrm(only non-zero value) between ranint1 and ranint2
                 ranint1, ranint2 = sorted((randint(0, cities - 1), randint(0, cities - 1)))
@@ -250,6 +292,8 @@ def mutation():
                         flag += 1
         rand = random()
         if rand < pm * 0.5:
+        # if 0:
+        # if 1:
             # print("mutation -- exchange...")
             # print('--before--:', sum(range(0, cities)) - sum(strip(population[i].chrm)))
             #2. exchange.
@@ -267,7 +311,12 @@ def mutation():
             #i -----0-----<0>-    -----0-----<A>-
             #  -----0------0--    -----0------0--
             #with prefix s to avoid conflict with loop variables
-            si = 0; sk = 0; sj = 0; sl = 0; sii = 0; sjj = 0
+            # print('before')
+            # for j in range(travelers):
+                # for k in range(cities):
+                    # print('%2d' % (population[i].chrm[j][k]), end='')
+                # print('')
+            # si = 0; sk = 0; sj = 0; sl = 0; sii = 0; sjj = 0
             #count the num of 0 and non-0, for random
             cnt0 = 0; cntnon0 = 0
             for j in range(travelers):
@@ -277,6 +326,7 @@ def mutation():
                         cnt0 += 1
                     else:
                         cntnon0 += 1
+            rand0 = 0; randnon0 = 0
             #these ==0 cases won't happen normally
             if cnt0 != 0:
                 rand0 = randint(1, cnt0)
@@ -290,44 +340,61 @@ def mutation():
                     else:
                         cntnon0 += 1
                     #now judge
-                    if cnt0 == cnt0:
-                        si = j; sk = k
-                    if cnt0 == cntnon0:
-                        sj = j; sl = k
-            #swap #1
-            population[i].chrm[si][sk], population[i].chrm[sj][sl] = \
-                (population[i].chrm[sj][sl], population[i].chrm[si][sk])
+                    if cnt0 == rand0:
+                        si = j
+                        sk = k
+                        #a stupid way to make sure si sk not be changed again
+                        cnt0 = 999999
+                    if cntnon0 == randnon0:
+                        sj = j
+                        sl = k
+                        cntnon0 = 999999
             #find i'
+            sii = 0
             for j in range(travelers):
                 if population[i].chrm[j][sk] != 0:
                     sii = j
                     break
             #random j'
             sjj = randint(0, travelers - 1)
+            # print("si:%d sk:%d sj:%d sl:%d sii:%d sjj:%d" % (si, sk, sj, sl, sii, sjj))
+            #swap #1
+            population[i].chrm[si][sk], population[i].chrm[sj][sl] = \
+                (population[i].chrm[sj][sl], population[i].chrm[si][sk])
             #swap #2
             population[i].chrm[sii][sk], population[i].chrm[sjj][sl] = \
                 (population[i].chrm[sjj][sl], population[i].chrm[sii][sk])
             # print('--after--:', sum(range(0, cities)) - sum(strip(population[i].chrm)))
+            # for j in range(travelers):
+                # for k in range(cities):
+                    # print('%2d' % (population[i].chrm[j][k]), end='')
+                # print('')
 
 def print_result():
     maxi = 0
     for i in range(N):
         if population[i].fitness < population[maxi].fitness:
             maxi = i
-    print("min distance found:", population[maxi].fitness)
+    print("min distance now found:", round(population[maxi].fitness, 5))
+    # print("min time: ", str(round(population[maxi].fitness / speed, 5)))
     for i in range(travelers):
         print("traveler ", i, ":")
         print([population[maxi].chrm[i][x] for x in range(cities) if population[maxi].chrm[i][x]])
+    print("min distance in history:", round(mindistancehistory, 5))
+    for i in range(travelers):
+        print("traveler history", i, ":")
+        print([minindividualhistory.chrm[i][x] for x in range(cities) if minindividualhistory.chrm[i][x]])
+
 
 #begin of main
 initialize()
 #main loop
 calc_fitness()
 for t in range(T):
-    print("generation " + str(t) + ":")
+    print("generation " + str(t) + ": min distance: " + str(round(mindistancenow, 5)))
     crossover()
     mutation()
-    calc_fitness()
+    calc_fitness2()
     select()
 print_result()
 print("end.")
