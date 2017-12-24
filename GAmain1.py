@@ -12,8 +12,8 @@ from math import *
 
 cities = 66    #all 66 cities
 travelers = 14  #all 14 travelers
-T = 200     #generations
-N = 500     #population
+T = 1000     #generations
+N = 1000     #population
 
 pc = 0.8    #crossover probability
 pm = 0.1    #mutation probability
@@ -34,7 +34,10 @@ class individual:
     #init with a random route for each indiviudal
     def __init__(self):
         #fitness of each individual, smaller is better
+        #fitness is the biggest length of the 14 travelers
+        #fitness2 is total length
         self.fitness = 0
+        self.fitness2 = 0
         #the chromosomes -- S
         #each individual from the population:
         #each traveler -- S_i: S_1 to S_travelers
@@ -55,9 +58,12 @@ class individual:
 
 
 #global minimum distance
-mindistance = 999999.99
+mindistance = 999999.99 #save this only to be able to use calc_fitness
 mindistancenow = 999999.99
+mindistancetotalnow = 999999.99
+
 mindistancehistory = 999999.99
+mindistancetotalhistory = 999999.99
 minindividualhistory = individual()
 
 #the population and popnew for temp storage
@@ -90,14 +96,18 @@ def initialize():
     for i in range(1, N):
         selection[i] += selection[i - 1]
 
-#calculate the fitness of each individual #2
+#calculate the fitness of each individual #2, improved
 def calc_fitness2():
+    global mindistancenow
+    global mindistancetotalnow
+    global mindistancetotalhistory
     global mindistancehistory
     global minindividualhistory
-    global mindistancenow
     print("calulate fitness #2...")
-    mindistancelocal = -1
+    mindistancenow = -1
     for i in range(N):
+        mindistancetotalnow = 0
+        mindistancenow = -1
         for j in range(travelers):
             length = 0
             #start from city 0
@@ -106,17 +116,22 @@ def calc_fitness2():
                 citynext = population[i].chrm[j][k]
                 if citynext != 0:
                     length += dist[citynow][citynext]
+                    mindistancetotalnow += dist[citynow][citynext]
                     citynow = citynext
-                    #"length" at-install
+                    #"mindistancenow" at-install
                     length += installtimelength[citynow]
+                    mindistancetotalnow += installtimelength[citynow]
             #go back to city 0
             length += dist[citynow][0]
-            mindistancelocal = max(mindistancelocal, length)
-        population[i].fitness = mindistancelocal
-        mindistancenow = mindistancelocal
-        if mindistancelocal < mindistancehistory:
-            mindistancehistory = mindistancelocal
+            mindistancetotalnow += dist[citynow][0]
+            mindistancenow = max(length, mindistancenow)
+        population[i].fitness = mindistancenow
+        population[i].fitness2 = mindistancetotalnow
+        #update history
+        if mindistancenow < mindistancehistory:
+            mindistancehistory = mindistancenow
             minindividualhistory = population[i]
+        mindistancetotalhistory = min(mindistancetotalhistory, mindistancetotalnow)
 
 #calculate the fitness of each individual
 def calc_fitness():
@@ -375,14 +390,10 @@ def print_result():
     for i in range(N):
         if population[i].fitness < population[maxi].fitness:
             maxi = i
-    print("min distance now found:", round(population[maxi].fitness, 5))
-    # print("min time: ", str(round(population[maxi].fitness / speed, 5)))
+    print("Min distance in history:", round(mindistancehistory, 5))
+    print("Min distance total in history:", round(mindistancetotalhistory, 5))
     for i in range(travelers):
         print("traveler ", i, ":")
-        print([population[maxi].chrm[i][x] for x in range(cities) if population[maxi].chrm[i][x]])
-    print("min distance in history:", round(mindistancehistory, 5))
-    for i in range(travelers):
-        print("traveler history", i, ":")
         print([minindividualhistory.chrm[i][x] for x in range(cities) if minindividualhistory.chrm[i][x]])
 
 
@@ -391,7 +402,9 @@ initialize()
 #main loop
 calc_fitness()
 for t in range(T):
-    print("generation " + str(t) + ": min distance: " + str(round(mindistancenow, 5)))
+    print("Generation " + str(t))
+    print("Min distance: " + str(round(mindistancenow, 5)))
+    print("Min mindistance total:" + str(round(mindistancetotalnow, 5)))
     crossover()
     mutation()
     calc_fitness2()

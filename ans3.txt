@@ -1,0 +1,33 @@
+1000
+1000
+
+min distance in history: 502.0
+traveler history 0 :
+[31, 54, 58]
+traveler history 1 :
+[6, 36, 35, 4, 14, 8]
+traveler history 2 :
+[5, 43, 34, 56, 21, 26]
+traveler history 3 :
+[23, 33, 24]
+traveler history 4 :
+[28, 11, 41]
+traveler history 5 :
+[2, 1, 29, 12, 20, 32, 25, 61]
+traveler history 6 :
+[60, 39, 38, 17, 62]
+traveler history 7 :
+[27, 18]
+traveler history 8 :
+[9, 10, 53, 22, 51, 49]
+traveler history 9 :
+[40, 19, 45, 16, 59, 64]
+traveler history 10 :
+[44, 55, 3, 15, 42]
+traveler history 11 :
+[50, 65, 48, 57]
+traveler history 12 :
+[37, 63, 13, 7]
+traveler history 13 :
+[46, 47, 30, 52]
+end.

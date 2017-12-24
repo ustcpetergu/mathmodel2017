@@ -1,0 +1,31 @@
+population:500
+genetation:500
+min distance in history: 511.9
+traveler history 0 :
+[3, 63, 49, 8]
+traveler history 1 :
+[56, 54, 18, 57]
+traveler history 2 :
+[40, 29, 46]
+traveler history 3 :
+[14, 45, 5, 16]
+traveler history 4 :
+[41, 17, 22, 53, 44, 34, 31]
+traveler history 5 :
+[2, 20, 26, 13, 9]
+traveler history 6 :
+[25, 10, 1]
+traveler history 7 :
+[36, 47, 59, 28, 4, 51, 38]
+traveler history 8 :
+[58, 30, 24, 35, 43]
+traveler history 9 :
+[7, 52, 65, 19]
+traveler history 10 :
+[12, 11, 21, 42, 23]
+traveler history 11 :
+[62, 61, 50, 27, 60]
+traveler history 12 :
+[37, 6, 39, 15, 64, 33]
+traveler history 13 :
+[32, 48, 55]
