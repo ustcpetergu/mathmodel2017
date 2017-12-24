@@ -13,7 +13,7 @@ from math import *
 cities = 66    #all 66 cities
 travelers = 14  #all 14 travelers
 T = 1000     #generations
-N = 1000     #population
+N = 50     #population
 
 pc = 0.8    #crossover probability
 pm = 0.1    #mutation probability
@@ -167,7 +167,7 @@ def select():
     global population
     global popnew
     #sort
-    population = sorted(population, key = lambda x: x.fitness)
+    population = sorted(population, key = lambda x:(x.fitness, x.fitness2))
     #choose randomly
     for i in range(N):
         #random real number from 0 to 1
