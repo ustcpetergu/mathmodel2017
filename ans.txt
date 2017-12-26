@@ -29,3 +29,67 @@ traveler 12
 [54, 45, 58, 22, 4]
 traveler 13
 [14, 31, 5, 2, 25, 8]
+
+
+Min distance in history:497.1
+Min distance total in history:4252.5
+traveler 0
+[53, 49, 31, 29, 25, 38, 15, 4]
+traveler 1
+[33, 62]
+traveler 2
+[14, 34, 59, 35, 6]
+traveler 3
+[24, 30, 18, 63, 36, 57, 48, 45, 40, 55]
+traveler 4
+[7, 37, 47, 41, 20]
+traveler 5
+[44, 28]
+traveler 6
+[12, 4]
+traveler 7
+[50, 22, 54, 16, 19, 30, 9, 17, 2]
+traveler 8
+[56, 26, 13, 1, 2, 27, 65, 61, 52]
+traveler 9
+[21, 58, 3, 60]
+traveler 10
+[8]
+traveler 11
+[11, 32, 10, 23]
+traveler 12
+[46, 43, 5, 51, 22]
+traveler 13
+[64, 42, 39, 22]
+
+
+Min distance in history:505.0
+Min distance total in history:4512.6
+traveler 0
+[25, 30, 9]
+traveler 1
+[55, 49, 23, 18, 53, 1]
+traveler 2
+[22, 32, 17, 19, 36]
+traveler 3
+[13, 30, 51, 27, 26, 48, 46]
+traveler 4
+[22, 52, 64, 37, 34]
+traveler 5
+[12, 47, 62, 60]
+traveler 6
+[33, 63, 7]
+traveler 7
+[35, 28, 22]
+traveler 8
+[2, 2, 6, 8, 41, 40]
+traveler 9
+[38, 65, 31]
+traveler 10
+[20, 4, 11, 50, 14, 15]
+traveler 11
+[57, 16, 10, 5, 59]
+traveler 12
+[56, 29, 3, 39, 4, 24]
+traveler 13
+[54, 43, 21, 58, 42, 44, 45, 61]
