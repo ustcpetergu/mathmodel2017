@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 #NOTE: run this ONLY ONCE!
-#jam 10 ways
 from random import *
-jammed = 10
 realcity = 66
 dist = [[0 for col in range(realcity)] for row in range(realcity)]
 fin = open("data2.txt", "r")
