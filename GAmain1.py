@@ -89,8 +89,8 @@ def initialize():
     global cities2realcity
     fin1 = open("destdata.txt", "r")
     for i in range(cities):
-        # (cities2realcity[i], installtimelength[i], weight[i]) = fin1.readline()
-        (cities2realcity[i], nouse, weight[i]) = fin1.readline().split()
+        (cities2realcity[i], installtimelength[i], weight[i]) = fin1.readline().split()
+        # (cities2realcity[i], nouse, weight[i]) = fin1.readline().split()
     for i in range(cities):
         cities2realcity[i] = int(cities2realcity[i])
         weight[i] = float(weight[i])
