@@ -300,23 +300,22 @@ def mutation():
     print("mutation...")
     for i in range(N):
         #two kind of mutation, each probability is 0.5 * pm
-        for j in range(travelers):
-            rand = random()
-            # if rand < pm * 0.5:
-            if 0:
-                # print("mutation -- reverse...")
-                #1. reverse a slice of chrm(only non-zero value) between ranint1 and ranint2
-                ranint1, ranint2 = sorted((randint(0, cities - 1), randint(0, cities - 1)))
-                #t is population[i].chrm[j] with zeros striped
-                t = [x for x in population[i].chrm[j] if x]
-                t.reverse()
-                #assign back reversed values
-                #I think this part is ugly and verbose
-                flag = 0
-                for k in range(cities):
-                    if population[i].chrm[j][k] != 0:
-                        population[i].chrm[j][k] = t[flag]
-                        flag += 1
+        rand = random()
+        if rand < pm * 0.5:
+        # if 0:
+            # print("mutation -- reverse...")
+            #1. reverse a "block" of chrm between ranint1 and ranint2
+            #  ----A+++++c----    ----c+++++A----
+            #  ----B+++++e----    ----e+++++B----
+            #  ----C+++++d----    ----e+++++C----
+            #  ----+++++++---- => ----+++++++----
+            #  ----+++++++----    ----+++++++----
+            #  ----+++++++----    ----+++++++----
+            #  ----E+++++a----    ----a+++++E----
+            #t is population[i].chrm[j] with zeros striped
+            pnt1, pnt2 = (randint(0, cities - 1), randint(1, cities - 1))
+            for j in range(travelers):
+                population[i].chrm[j] = population[i].chrm[j][:pnt1 + 1] + population[i].chrm[j][pnt1:pnt2 + 1][::-1] + population[i].chrm[j][pnt2 + 1:]
         rand = random()
         if rand < pm * 0.5:
         # if 0:
