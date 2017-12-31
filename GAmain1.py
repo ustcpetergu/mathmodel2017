@@ -321,13 +321,14 @@ def printtime(indi):
         print(str([timewindow[indi.chrm[i][x]] for x in range(cities) if indi.chrm[i][x]]))
     print('')
 def crossover():
+    #NEW crossover (may be a VERY BAD one) written by ME
     if len(sys.argv) == 2:
         if sys.argv[1] != "-q":
             print("crossover...")
     h = [i for i in range(N)]
     shuffle(h)
     for i in range(int((N - 1) / 2)):
-        if random() > pc:
+        if random() < pc:
             pass
     # #order crossover (OX)
     # #choose 2 random crossover points
