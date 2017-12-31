@@ -15,7 +15,7 @@ realcity = 66   #66 real cities(but I use singular form to have a difference)
 cities = 71     #all 71 cities, including 5 virtual cities
 travelers = 14  #all 14 travelers
 T = 1000        #generations
-N = 100         #population
+N = 100        #population
 
 pc = 1.0        #crossover probability
 pm = 0.4        #mutation probability
@@ -151,14 +151,16 @@ def calc_fitness2():
             length += dist[cities2realcity[citynow]][0]
             mindistancetotalnow += dist[cities2realcity[citynow]][0]
             mindistancenowt = max(length, mindistancenowt)
-        mindistancenow = min(mindistancenow, mindistancenowt)
         population[i].fitness = mindistancenowt
         population[i].fitness2 = mindistancetotalnow
+        mindistancenow = min(mindistancenow, mindistancenowt)
         #update history
         if mindistancenow < mindistancehistory:
             mindistancehistory = mindistancenow
             minindividualhistory = copy.deepcopy(population[i])
         mindistancetotalhistory = min(mindistancetotalhistory, mindistancetotalnow)
+    # print('calc_fitness', str([int(x.fitness) for x in population]))
+    # print('calc_fitness', int(mindistancenow))
 
 #improved tournament selection
 #to keep the best individuals in history always be used
@@ -170,16 +172,16 @@ def select2_2():
     global popnew
     global bestindi
     population = sorted(population, key = lambda x:(x.fitness, x.fitness2))
-    poptmp = [x for x in bestindi + population[:10]]
+    poptmp = [x for x in bestindi + population[:M]]
     poptmp = sorted(poptmp, key = lambda x:(x.fitness, x.fitness2))
-    bestindi = [copy.deepcopy(x) for x in poptmp[:10]]
+    bestindi = [copy.deepcopy(x) for x in poptmp[:M]]
     print([int(x.fitness) for x in bestindi])
     for i in range(N):
         popt = sorted([population[randint(0, N - 1)], population[randint(0, N - 1)]], key = lambda x:(x.fitness, x.fitness2))
         popnew[i] = popt[0]
     population = popnew
     population = sorted(population, key = lambda x:(x.fitness, x.fitness2))
-    population = population[:-10] + [copy.deepcopy(x) for x in bestindi]
+    population = population[:-M] + [copy.deepcopy(x) for x in bestindi]
 
 #input a individual's chromosome
 #return striped(without zeros, a one-dimension array) chrm
@@ -415,8 +417,8 @@ def print_result():
 def printmsg():
     if len(sys.argv) == 2:
         if sys.argv[1] == "-q":
-            print(str(round(min([x.fitness for x in population]), 5)))
-            # print(str(round(mindistancenow, 5)))
+            print('-->', str(round(min([x.fitness for x in population]), 5)))
+            # print('-->', str(round(mindistancenow, 5)))
     else:
         print("Generation " + str(t))
         print("Min distance: " + str(round(mindistancenow, 5)))
@@ -427,11 +429,11 @@ initialize()
 #main loop
 calc_fitness2()
 for t in range(T):
+    printmsg()
     crossover()
     mutation()
     calc_fitness2()
     select2_2()
-    printmsg()
 print_result()
 print("end.")
 
