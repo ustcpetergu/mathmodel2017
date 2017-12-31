@@ -395,3 +395,36 @@ traveler 13
 [14, 23, 56, 55]
 -----
 
+-----
+Min distance in history:375.8
+Min distance total in history:4235.6
+traveler 0
+[37, 43, 20, 22, 32]
+traveler 1
+[46, 6, 36, 18, 38, 7, 47]
+traveler 2
+[49, 65, 13, 12, 26, 41, 56]
+traveler 3
+[59, 42, 44, 58, 40, 52, 30]
+traveler 4
+[30, 16, 2, 54, 27, 64, 31, 51, 45]
+traveler 5
+[9, 25, 34, 55, 15, 50]
+traveler 6
+[4, 21, 5, 24, 4]
+traveler 7
+[11, 48, 19, 8, 60]
+traveler 8
+[10, 22, 35]
+traveler 9
+[22, 29, 14, 39, 62, 53, 28, 57]
+traveler 10
+[2, 1]
+traveler 11
+[63, 17, 33]
+traveler 12
+[61]
+traveler 13
+[3, 23]
+-----
+

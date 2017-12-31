@@ -160,18 +160,6 @@ def calc_fitness2():
             minindividualhistory = copy.deepcopy(population[i])
         mindistancetotalhistory = min(mindistancetotalhistory, mindistancetotalnow)
 
-#tournament selection
-def select2():
-    if sys.argv == 2:
-        if sys.argv[1] != "-q":
-            print("select...")
-    global population
-    global popnew
-    for i in range(N):
-        popt = sorted([population[randint(0, N)], population[randint(0, N)]], key = lambda x:(x.fitness, x.fitness2))
-        popnew[i] = popt[0]
-    population = popnew
-
 #improved tournament selection
 #to keep the best individuals in history always be used
 def select2_2():
@@ -189,8 +177,8 @@ def select2_2():
     for i in range(N):
         popt = sorted([population[randint(0, N - 1)], population[randint(0, N - 1)]], key = lambda x:(x.fitness, x.fitness2))
         popnew[i] = popt[0]
-    population = sorted(population, key = lambda x:(x.fitness, x.fitness2))
     population = popnew
+    population = sorted(population, key = lambda x:(x.fitness, x.fitness2))
     population = population[:-10] + [copy.deepcopy(x) for x in bestindi]
 
 #input a individual's chromosome
@@ -427,7 +415,8 @@ def print_result():
 def printmsg():
     if len(sys.argv) == 2:
         if sys.argv[1] == "-q":
-            print(str(round(mindistancenow, 5)))
+            print(str(round(min([x.fitness for x in population]), 5)))
+            # print(str(round(mindistancenow, 5)))
     else:
         print("Generation " + str(t))
         print("Min distance: " + str(round(mindistancenow, 5)))
@@ -435,15 +424,14 @@ def printmsg():
 
 #begin of main
 initialize()
-print("len", len(population))
 #main loop
 calc_fitness2()
 for t in range(T):
-    printmsg()
     crossover()
     mutation()
     calc_fitness2()
     select2_2()
+    printmsg()
 print_result()
 print("end.")
 
