@@ -39,7 +39,7 @@ speed = 60
 #I'll take the average value, 1.1 hours, and exchange time to distance
 #with speed 60km/h
 #speed will be multiplied when initialization
-installtimelength = [0 for i in range(cities)]
+installtimelength = [1.1 for i in range(cities)]
 #the start point 0 don't need install time
 installtimelength[0] = 0
 #the time window
@@ -414,7 +414,7 @@ def print_result():
     for i in range(travelers):
         fout.write("traveler " + str(i))
         fout.write('\n')
-        fout.write("\tdep. time:" + str(round(minindividualhistory.timedep[i])) + str((round((minindividualhistory[i].timedep[i] - int(minindividualhistory[i].timedep[i])) * 60))))
+        fout.write("\tdep. time:" + str(round(minindividualhistory.timedep[i])) + str((round((minindividualhistory.timedep[i] - int(minindividualhistory[i].timedep[i])) * 60))))
         fout.write('\n')
         fout.write(str([cities2realcity[minindividualhistory.chrm[i][x]] for x in range(cities) if minindividualhistory.chrm[i][x]]))
         fout.write('\n')

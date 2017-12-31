@@ -45,3 +45,277 @@ traveler 13
 [35, 22, 15, 17, 46]
 -----
 
+-----
+Min distance in history:660.32time out:0
+Min distance total:6024.8
+traveler 0
+---------------
+-----
+Min distance in history:690.4time out:0
+Min distance total:5979.84
+traveler 0
+-----
+Min distance in history:684.4time out:0
+Min distance total:5974.2
+traveler 0
+-----
+Min distance in history:660.32time out:0
+Min distance total:6077.5
+traveler 0
+-----
+Min distance in history:678.82time out:0
+Min distance total:5953.6
+traveler 0
+-----
+Min distance in history:660.32time out:0
+Min distance total:5975.9
+traveler 0
+-----
+Min distance in history:660.32time out:0
+Min distance total:5844.4
+traveler 0
+
+
+
+
+
+
+
+
+
+
+
+Min distance in history: 656.4
+Min distance total in history: 5614.1 time out: 0
+traveler  0 :
+[30, 32, 42, 17, 50]
+traveler  1 :
+[36, 49, 63, 19, 18]
+traveler  2 :
+[26, 40, 22, 8, 5, 11]
+traveler  3 :
+[60, 61]
+traveler  4 :
+[35, 21, 22, 7, 9]
+traveler  5 :
+[53, 38, 33, 14, 1, 4]
+traveler  6 :
+[54, 44, 52, 46, 27]
+traveler  7 :
+[4, 64, 41, 16]
+traveler  8 :
+[24, 39, 59, 6, 62, 2]
+traveler  9 :
+[65, 28, 15, 29, 10, 20]
+traveler  10 :
+[37, 31, 43, 55]
+traveler  11 :
+[47, 30, 13, 3, 2, 58]
+traveler  12 :
+[56, 48, 25, 57, 22, 12]
+traveler  13 :
+[45, 34, 51, 23]
+
+
+
+
+
+
+Min distance in history: 660.32
+Min distance total in history: 5493.8 time out: 0
+traveler  0 :
+[45, 21, 22, 63]
+traveler  1 :
+[53, 34, 57, 43]
+traveler  2 :
+[47, 64, 41, 1, 4]
+traveler  3 :
+[54, 44, 6, 62, 9, 27]
+traveler  4 :
+[37, 30, 51]
+traveler  5 :
+[30, 33, 13, 3, 55, 50]
+traveler  6 :
+[56, 39, 28, 15, 22, 12]
+traveler  7 :
+[35, 61, 42, 8, 2]
+traveler  8 :
+[36, 25, 17, 46, 18]
+traveler  9 :
+[65, 31, 52, 29, 10, 20]
+traveler  10 :
+[4, 59, 23, 58]
+traveler  11 :
+[60, 40, 22, 16, 2, 11]
+traveler  12 :
+[24, 48, 49, 7, 5]
+traveler  13 :
+[26, 38, 32, 14, 19]
+
+
+
+
+
+
+Min distance in history: 658.32
+Min distance total in history: 5654.9 time out: 0
+traveler  0 :
+[47, 34, 15, 9]
+traveler  1 :
+[37, 59, 7, 4, 58]
+traveler  2 :
+[26, 64, 41, 23]
+traveler  3 :
+[54, 49, 52, 19]
+traveler  4 :
+[65, 32, 42, 3, 10]
+traveler  5 :
+[45, 28, 43]
+traveler  6 :
+[36, 33, 14, 16, 5, 18]
+traveler  7 :
+[35, 61, 51, 2]
+traveler  8 :
+[30, 30, 57, 29, 50]
+traveler  9 :
+[56, 48, 25, 6, 62, 12]
+traveler  10 :
+[53, 38, 44, 63, 22, 11]
+traveler  11 :
+[24, 21, 22, 8, 46, 27]
+traveler  12 :
+[60, 39, 31, 13, 17, 55, 20]
+traveler  13 :
+[4, 40, 22, 1, 2]
+
+
+
+Min distance in history: 660.32
+Min distance total in history: 5746.1 time out: 0
+traveler  0 :
+[56, 21, 22, 63, 12]
+traveler  1 :
+[30, 44, 57, 43, 10, 50]
+traveler  2 :
+[35, 61, 42, 16, 46]
+traveler  3 :
+[53, 25, 52, 22, 58]
+traveler  4 :
+[65, 31, 6, 23, 55, 20]
+traveler  5 :
+[37, 28, 17]
+traveler  6 :
+[60, 40, 22, 1, 5]
+traveler  7 :
+[4, 39, 49, 3, 4]
+traveler  8 :
+[54, 34, 51, 62, 9, 27]
+traveler  9 :
+[45, 30, 14, 8, 2]
+traveler  10 :
+[26, 38, 32, 7, 11]
+traveler  11 :
+[36, 33, 13, 19, 18]
+traveler  12 :
+[47, 48, 59, 29]
+traveler  13 :
+[24, 64, 41, 15, 2]
+
+
+
+
+
+
+
+Min distance in history: 649.2
+Min distance total in history: 5575.1 time out: 0
+traveler  0 :
+[54, 44, 63, 9, 58]
+traveler  1 :
+[53, 38, 49, 3, 5, 12]
+traveler  2 :
+[36, 30, 13, 23, 11]
+traveler  3 :
+[30, 40, 22, 1, 2, 50]
+traveler  4 :
+[35, 34, 51, 8, 10]
+traveler  5 :
+[37, 33, 14, 62]
+traveler  6 :
+[45, 64, 41, 52, 19]
+traveler  7 :
+[56, 25, 57, 22]
+traveler  8 :
+[26, 31, 15, 4]
+traveler  9 :
+[24, 39, 32, 42, 16]
+traveler  10 :
+[4, 61, 17, 2]
+traveler  11 :
+[60, 21, 22, 7, 46, 27]
+traveler  12 :
+[65, 28, 43, 55, 20]
+traveler  13 :
+[47, 48, 59, 6, 29, 18]
+
+
+
+
+
+
+
+
+Min distance in history: 657.48
+Min distance total in history: 5694.1 time out: 0
+traveler  0 :
+[36, 34, 1, 5]
+traveler  1 :
+[45, 30, 14, 8, 10]
+traveler  2 :
+[37, 25, 16, 22]
+traveler  3 :
+[35, 61, 51, 9]
+traveler  4 :
+[53, 38, 32, 7, 29]
+traveler  5 :
+[4, 59, 57, 23]
+traveler  6 :
+[30, 33, 42, 43, 2, 50]
+traveler  7 :
+[60, 39, 44, 6, 2]
+traveler  8 :
+[65, 28, 15, 4, 58]
+traveler  9 :
+[26, 31, 13, 17, 55, 20]
+traveler  10 :
+[47, 48, 49, 63, 12]
+traveler  11 :
+[24, 40, 22, 3, 11]
+traveler  12 :
+[54, 64, 41, 52, 19, 27]
+traveler  13 :
+[56, 21, 22, 62, 46, 18]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
