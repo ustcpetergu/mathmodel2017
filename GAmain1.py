@@ -120,10 +120,10 @@ def calc_fitness2():
     if len(sys.argv) == 2:
         if sys.argv[1] != "-q":
             print("calulate fitness #2...")
-    mindistancenow = -1
+    mindistancenow = 999999
     for i in range(N):
         mindistancetotalnow = 0
-        mindistancenow = -1
+        mindistancenowt = -1
         for j in range(travelers):
             length = 0
             weightnow = 0
@@ -135,7 +135,7 @@ def calc_fitness2():
                     length += dist[cities2realcity[citynow]][cities2realcity[citynext]]
                     mindistancetotalnow += dist[cities2realcity[citynow]][cities2realcity[citynext]]
                     citynow = citynext
-                    #"mindistancenow" at-install
+                    #"mindistancenowt" at-install
                     length += installtimelength[citynow]
                     mindistancetotalnow += installtimelength[citynow]
                     weightnow += weight[citynow]
@@ -146,16 +146,18 @@ def calc_fitness2():
                 #to get better result
                 population[i] = individual()
                 j -= 1
+                continue
             #go back to city 0
             length += dist[cities2realcity[citynow]][0]
             mindistancetotalnow += dist[cities2realcity[citynow]][0]
-            mindistancenow = max(length, mindistancenow)
-        population[i].fitness = mindistancenow
+            mindistancenowt = max(length, mindistancenowt)
+        mindistancenow = min(mindistancenow, mindistancenowt)
+        population[i].fitness = mindistancenowt
         population[i].fitness2 = mindistancetotalnow
         #update history
         if mindistancenow < mindistancehistory:
             mindistancehistory = mindistancenow
-            minindividualhistory = population[i]
+            minindividualhistory = copy.deepcopy(population[i])
         mindistancetotalhistory = min(mindistancetotalhistory, mindistancetotalnow)
 
 #tournament selection
@@ -248,7 +250,7 @@ def crossover():
     h = [i for i in range(N)]
     shuffle(h)
     for i in range(int((N - 1) / 2)):
-        if random() > pc:
+        if random() < pc:
             #crossover i and N-i-1
             # print('---')
             #strip
