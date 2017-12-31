@@ -1,0 +1,47 @@
+-----
+Min distance in history:630.72time out:0
+Min distance total:1430.0
+traveler 0
+	dep. time:8.465
+[36, 63]
+traveler 1
+	dep. time:7.69
+[47, 54, 28, 6, 8, 58]
+traveler 2
+	dep. time:7.39667
+[45, 30, 32, 57, 20]
+traveler 3
+	dep. time:7.59667
+[53, 40, 62]
+traveler 4
+	dep. time:7.6
+[24, 48, 31, 41, 14, 1]
+traveler 5
+	dep. time:7.695
+[60, 39, 30, 16, 2, 9, 55]
+traveler 6
+	dep. time:10.09667
+[33, 25, 42, 27]
+traveler 7
+	dep. time:13.00667
+[3, 23, 22, 11, 18, 50]
+traveler 8
+	dep. time:9.47167
+[61, 59, 51, 29, 4]
+traveler 9
+	dep. time:7.50667
+[37, 49, 7, 43, 5, 2, 12]
+traveler 10
+	dep. time:7.59
+[56, 21, 34, 13, 19]
+traveler 11
+	dep. time:7.63667
+[26, 64, 44, 22, 10]
+traveler 12
+	dep. time:7.72667
+[4, 65, 38, 52]
+traveler 13
+	dep. time:7.53
+[35, 22, 15, 17, 46]
+-----
+

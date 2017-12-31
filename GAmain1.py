@@ -16,10 +16,11 @@ import copy
 realcity = 66   #66 real cities(but I use singular form to have a difference)
 cities = 71     #all 71 cities, including 5 virtual cities
 travelers = 14  #all 14 travelers
-T = 1000        #generations
+T = 100        #generations
 N = 100         #population
 
-pc = 1.0        #crossover probability
+pc = 0.2        #crossover probability
+                #NOTE: is not REAL crossover, so probability is small
 pm = 0.4        #mutation probability
 
 #mapping from cities(including virtual cities) to real city
@@ -206,10 +207,13 @@ def calc_fitness2():
                         time = timewindow[citynext]
                     #late, be punished
                     elif time > timewindow[citynext] + 0.5:
+                        #to make it a dead individual
+                        weightnow = 999
+                        break
                         # print("time out!")
-                        length += (time - timewindow[citynext] - 0.5) * punish
+                        # length += (time - timewindow[citynext] - 0.5) * punish
                         #a timed out individual
-                        population[i].istimeout = 1
+                        # population[i].istimeout = 1
                     else:
                         pass
                     length += dist[cities2realcity[citynow]][cities2realcity[citynext]]
@@ -236,7 +240,7 @@ def calc_fitness2():
         population[i].fitness = mindistancenowt
         population[i].fitness2 = mindistancetotalnow
         #update history
-        if mindistancenow < mindistancehistory:
+        if population[i].istimeout == 0 and mindistancenow < mindistancehistory:
             mindistancehistory = mindistancenow
             minindividualhistory = copy.deepcopy(population[i])
         mindistancetotalhistory = min(mindistancetotalhistory, mindistancetotalnow)
@@ -325,164 +329,69 @@ def crossover():
     if len(sys.argv) == 2:
         if sys.argv[1] != "-q":
             print("crossover...")
-    h = [i for i in range(N)]
-    shuffle(h)
-    for i in range(int((N - 1) / 2)):
-        if random() < pc:
-            pass
-    # #order crossover (OX)
-    # #choose 2 random crossover points
-    # #exchange crossover parts
-    # #keep relative sequence of cities
-    # #a1 = 0 1 2 3 4 5 6 7 8 9
-    # #a2 = 9 8 7 6 5 4 3 2 1 0
-    # #OX points: ^1  ^2
-    # #b1 = 0 1 2|6 5 4|6 7 8 9
-    # #b2 = 9 8 7|3 4 5|6 7 8 9
-    # #a1 from point 2:6 7 8 9 0 1 2 3 4 5
-    # #remove 6 5 4:7 8 9 0 1 2 3
-    # #refill from point 2:1 2 3|6 5 4|7 8 9 0
-    # if len(sys.argv) == 2:
-        # if sys.argv[1] != "-q":
-            # print("crossover...")
-    # #pair randomly using shuffled array
     # h = [i for i in range(N)]
     # shuffle(h)
     # for i in range(int((N - 1) / 2)):
-        # if random() > pc:
-            # #crossover i and N-i-1
-            # # print('---')
-            # #strip
-            # a1 = strip(population[h[i]].chrm)
-            # a2 = strip(population[h[N - i - 1]].chrm)
-            # # print('a1:', a1)
-            # # print('a2:', a2)
-            # # if sum(a1) - sum(range(cities)) != 0:
-                # # print('a1!: ', sum(a1) - sum(range(cities)))
-            # # if sum(a2) - sum(range(cities)) != 0:
-                # # print('a2!: ', sum(a2) - sum(range(cities)))
-            # pos1, pos2 = sorted((randint(0, cities - 1), randint(0, cities - 1)))
-            # # print('pos1, pos2: ', pos1, pos2)
-            # length = pos2 - pos1 + 1
-            # ta = a1[pos1:pos2 + 1]
-            # tb = a2[pos1:pos2 + 1]
-            # #remove
-            # t1 = [x for x in (a1[pos2 + 1:] + a1[:pos2 + 1]) if not x in tb]
-            # t2 = [x for x in (a2[pos2 + 1:] + a2[:pos2 + 1]) if not x in ta]
-            # #refill
-            # afinal = t1[pos1:] + tb + t1[:pos1]
-            # bfinal = t2[pos1:] + ta + t2[:pos1]
-            
-            # # print('afinal :', afinal)
-            # # print('bfinal :', bfinal)
-            
-            # # h = [0 for j in range(cities)]
-            # # for j in range(cities):
-                # # h[afinal[j]] += 1
-            # # print('afinal:', h)
-            # # h = [0 for j in range(cities)]
-            # # for j in range(cities):
-                # # h[bfinal[j]] += 1
-            # # print('bfinal:', h)
-            
-            # # if sum(afinal) - sum(range(cities)) != 0:
-                # # print('afinal!: ', sum(afinal) - sum(range(cities)))
-            # # if sum(bfinal) - sum(range(cities)) != 0:
-                # # print('bfinal!: ', sum(bfinal) - sum(range(cities)))
-
-            # #expand
-            # population[h[i]].chrm = expand(afinal, population[h[i]].chrm)
-            # population[h[N - i - 1]].chrm = expand(bfinal, population[h[N - i - 1]].chrm)
-            # # chrmck(population[i].chrm)
-            # # chrmck(population[N - i - 1].chrm)
-            # # print('---')
-            # population[h[i]] = sortchrm(population[h[i]])
-            # population[h[N - i - 1]] = sortchrm(population[h[N - i - 1]])
-
-def mutation():
-    if len(sys.argv) == 2:
-        if sys.argv[1] != "-q":
-            print("mutation...")
+        # if random() < pc:
     for i in range(N):
-        #mutation-reverse does't work
-        rand = random()
-        if rand < pm:
-            # print("mutation -- exchange...")
-            # print('--before--:', sum(range(0, cities)) - sum(strip(population[i].chrm)))
-            #2. exchange.
-            #randomly find s_i_k = 0, s_j_l != 0, and swap them (showed in <>)
-            #exist s_i'_k !=0, i' in {1 to n} \ {i}
-            #random j' in {1 to n}
-            #swap s_i'_k and s_j'_l (showed in ())
-            #n equals travelers
-            #       l      k           l      k
-            #j'----(0)-----0--    ----(X)-----0--
-            #j ----<A>-----0--    ----<0>-----0--
-            #  -----0------0--    -----0------0--
-            #  -----0------0-- => -----0------0--
-            #i'-----0-----(X)-    -----0-----(0)-
-            #i -----0-----<0>-    -----0-----<A>-
-            #  -----0------0--    -----0------0--
-            #with prefix s to avoid conflict with loop variables
-            # print('before')
-            # for j in range(travelers):
-                # for k in range(cities):
-                    # print('%2d' % (population[i].chrm[j][k]), end='')
-                # print('')
-            # si = 0; sk = 0; sj = 0; sl = 0; sii = 0; sjj = 0
-            #count the num of 0 and non-0, for random
-            cnt0 = 0; cntnon0 = 0
-            for j in range(travelers):
-                for k in range(cities):
-                    # print("--"+str(i)+"--"+str(j)+"--"+str(k)+"--")
-                    if population[i].chrm[j][k] == 0:
-                        cnt0 += 1
+        h = [j for j in range(travelers)]
+        shuffle(h)
+        for j in range(int((travelers) / 2) - 1):
+            if random() < pc:
+                # print("a crossover....")
+                #crossover(or change?) population[i].chrm[h[j]] and population[i].chrm[h[N - j - 1]]
+                # print(h[j], h[N - j - 1])
+                # print(j, travelers - j - 1)
+                # print('--before--')
+                # print(population[i].chrm[h[j]])
+                # print(population[i].chrm[h[travelers - j - 1]])
+                bak1 = copy.deepcopy(population[i].chrm[h[j]])
+                bak2 = copy.deepcopy(population[i].chrm[h[travelers - j - 1]])
+                citypool = [x for x in population[i].chrm[h[j]] + population[i].chrm[h[travelers - j - 1]] if x]
+                citypool = sorted(citypool, key = lambda x:timewindow[x])
+                population[i].chrm[h[j]] = [0 for x in range(cities)]
+                population[i].chrm[h[travelers - j - 1]] = [0 for x in range(cities)]
+                # print([timewindow[x] for x in t])
+                #some kind of hard-coding and repeat code I think
+                for k in range(len(citypool)):
+                    oklist = []
+                    for m in (h[j], h[travelers - j - 1]):
+                        if population[i].chrm[m][0] == 0:
+                            oklist.append(m)
+                        else:
+                            l = 0
+                            while population[i].chrm[m][l]:
+                                l += 1
+                            l -= 1
+                            if timewindow[population[i].chrm[m][l]] + 0.5 + installtimelength[population[i].chrm[m][l]] / speed + dist[cities2realcity[population[i].chrm[m][l]]][cities2realcity[citypool[k]]] / speed <= timewindow[citypool[k]] + 0.5:
+                                oklist.append(m)
+                    # print(oklist)
+                    #failed, reset
+                    if oklist == []:
+                        population[i].chrm[h[j]] = bak1
+                        population[i].chrm[h[travelers - j - 1]] = bak2
+                        break
+                    pos = sample(oklist, 1)
+                    l = 0
+                    if population[i].chrm[pos[0]][0] == 0:
+                        l = -1
                     else:
-                        cntnon0 += 1
-            rand0 = 0; randnon0 = 0
-            #these ==0 cases won't happen normally
-            if cnt0 != 0:
-                rand0 = randint(1, cnt0)
-            if cntnon0!= 0:
-                randnon0 = randint(1, cntnon0)
-            cnt0 = 0; cntnon0 = 0
-            for j in range(travelers):
-                for k in range(cities):
-                    if population[i].chrm[j][k] == 0:
-                        cnt0 += 1
-                    else:
-                        cntnon0 += 1
-                    #now judge
-                    if cnt0 == rand0:
-                        si = j
-                        sk = k
-                        #a stupid way to make sure si sk not be changed again
-                        cnt0 = 999999
-                    if cntnon0 == randnon0:
-                        sj = j
-                        sl = k
-                        cntnon0 = 999999
-            #find i'
-            sii = 0
-            for j in range(travelers):
-                if population[i].chrm[j][sk] != 0:
-                    sii = j
-                    break
-            #random j'
-            sjj = randint(0, travelers - 1)
-            # print("si:%d sk:%d sj:%d sl:%d sii:%d sjj:%d" % (si, sk, sj, sl, sii, sjj))
-            #swap #1
-            population[i].chrm[si][sk], population[i].chrm[sj][sl] = \
-                (population[i].chrm[sj][sl], population[i].chrm[si][sk])
-            #swap #2
-            population[i].chrm[sii][sk], population[i].chrm[sjj][sl] = \
-                (population[i].chrm[sjj][sl], population[i].chrm[sii][sk])
-            # print('--after--:', sum(range(0, cities)) - sum(strip(population[i].chrm)))
-            # for j in range(travelers):
-                # for k in range(cities):
-                    # print('%2d' % (population[i].chrm[j][k]), end='')
-                # print('')
-            population[i] = sortchrm(population[i])
+                        while population[i].chrm[pos[0]][l]:
+                            l += 1
+                        l -= 1
+                    population[i].chrm[pos[0]][l + 1] = citypool[k]
+                # print('--after--')
+                # print(population[i].chrm[h[j]])
+                # print(j)
+                # print(travelers - j - 1)
+                # print(population[i].chrm[h[travelers - j - 1]])
+                # print('--crossover end')
+                # #bad move
+                # if population[i].chrm[h[j]] == [] or population[i].chrm[h[travelers - j - 1]] == []:
+                    # population[i].chrm[h[j]] = bak1
+                    # population[i].chrm[h[N - j - 1]] = bak2
+                    # j -= 1
+                    # break
 
 def print_result():
     maxi = 0
@@ -497,14 +406,15 @@ def print_result():
     fout = open("ans.txt", "a")
     fout.write('-----')
     fout.write('\n')
-    fout.write("Min distance in history:" + str(round(mindistancehistory, 5)), "time out:", minindividualhistory.istimeout)
+    fout.write("Min distance in history:" + str(round(minindividualhistory.fitness, 5)) + \
+            "time out:" + str(minindividualhistory.istimeout))
     fout.write('\n')
     fout.write("Min distance total:" + str(round(minindividualhistory.fitness2, 5)))
     fout.write('\n')
     for i in range(travelers):
         fout.write("traveler " + str(i))
         fout.write('\n')
-        fout.write("\tdep. time:", str(round(minindividualhistory.timedep[i], 5)))
+        fout.write("\tdep. time:" + str(round(minindividualhistory.timedep[i])) + str((round((minindividualhistory[i].timedep[i] - int(minindividualhistory[i].timedep[i])) * 60))))
         fout.write('\n')
         fout.write(str([cities2realcity[minindividualhistory.chrm[i][x]] for x in range(cities) if minindividualhistory.chrm[i][x]]))
         fout.write('\n')
@@ -529,8 +439,7 @@ for t in range(T):
     printmsg()
     # printchrm(minindividualhistory)
     # printchrm(population[0])
-    # crossover()
-    # mutation()
+    crossover()
     calc_fitness2()
     # for i in range(N):
         # print(population[i].fitness)
