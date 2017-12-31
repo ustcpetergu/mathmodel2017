@@ -117,10 +117,6 @@ traveler  13 :
 [45, 34, 51, 23]
 
 
-
-
-
-
 Min distance in history: 660.32
 Min distance total in history: 5493.8 time out: 0
 traveler  0 :
@@ -151,10 +147,6 @@ traveler  12 :
 [24, 48, 49, 7, 5]
 traveler  13 :
 [26, 38, 32, 14, 19]
-
-
-
-
 
 
 Min distance in history: 658.32
@@ -189,7 +181,6 @@ traveler  13 :
 [4, 40, 22, 1, 2]
 
 
-
 Min distance in history: 660.32
 Min distance total in history: 5746.1 time out: 0
 traveler  0 :
@@ -222,11 +213,6 @@ traveler  13 :
 [24, 64, 41, 15, 2]
 
 
-
-
-
-
-
 Min distance in history: 649.2
 Min distance total in history: 5575.1 time out: 0
 traveler  0 :
@@ -257,12 +243,6 @@ traveler  12 :
 [65, 28, 43, 55, 20]
 traveler  13 :
 [47, 48, 59, 6, 29, 18]
-
-
-
-
-
-
 
 
 Min distance in history: 657.48
@@ -318,4 +298,55 @@ traveler  13 :
 
 
 
+
+-----
+Min distance in history:661.82time out:0
+Min distance total:6060.14
+traveler 0
+-----
+Min distance in history:661.82time out:0
+Min distance total:6086.5
+traveler 0
+	dep. time:842
+[60, 39, 32, 51, 23, 55]
+traveler 1
+	dep. time:838
+[26, 33, 42, 46]
+traveler 2
+	dep. time:836
+[24, 61, 1, 29, 12]
+traveler 3
+	dep. time:844
+[4, 40, 22, 3, 2]
+traveler 4
+	dep. time:859
+[54, 64, 41, 15, 19, 20]
+traveler 5
+	dep. time:724
+[45, 21, 22, 63, 4]
+traveler 6
+	dep. time:832
+[35, 48, 49, 7]
+traveler 7
+	dep. time:80
+[65, 30, 14, 16, 22, 27]
+traveler 8
+	dep. time:836
+[53, 38, 34, 57, 62, 2]
+traveler 9
+	dep. time:936
+[30, 31, 13, 8, 10, 50]
+traveler 10
+	dep. time:841
+[47, 28, 43, 9]
+traveler 11
+	dep. time:828
+[36, 59, 6, 17, 18]
+traveler 12
+	dep. time:830
+[37, 44, 11]
+traveler 13
+	dep. time:835
+[56, 25, 52, 5, 58]
+-----
 

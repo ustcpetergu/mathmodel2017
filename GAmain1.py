@@ -16,7 +16,7 @@ import copy
 realcity = 66   #66 real cities(but I use singular form to have a difference)
 cities = 71     #all 71 cities, including 5 virtual cities
 travelers = 14  #all 14 travelers
-T = 100        #generations
+T = 10        #generations
 N = 100         #population
 
 pc = 0.2        #crossover probability
@@ -414,7 +414,7 @@ def print_result():
     for i in range(travelers):
         fout.write("traveler " + str(i))
         fout.write('\n')
-        fout.write("\tdep. time:" + str(round(minindividualhistory.timedep[i])) + str((round((minindividualhistory.timedep[i] - int(minindividualhistory[i].timedep[i])) * 60))))
+        fout.write("\tdep. time:" + str(round(minindividualhistory.timedep[i])) + str((round((minindividualhistory.timedep[i] - int(minindividualhistory.timedep[i])) * 60))))
         fout.write('\n')
         fout.write(str([cities2realcity[minindividualhistory.chrm[i][x]] for x in range(cities) if minindividualhistory.chrm[i][x]]))
         fout.write('\n')
